@@ -161,3 +161,28 @@ mongoose에는 스키마(schema)와 모델(model)이라는 개념 존재
   - findOneAndRemove() : 특정 조건 만족하는 데이터 하나 찾아서 제거
 - 데이터 업데이트할 때는 findByIdAndUpdate() 함수 사용
   - 세가지 파라미터 넣어줘야 함 : 첫번째는 id, 두번째는 업데이트 내영, 세번째는 업데이트의 옵션
+
+### 검증
+
+#### ObjectId 검증
+
+500 오류는 보통 서버에서 처리하지 않아 내부적으러 문제 생겼을 때 발생, 잘못된 id 전달했다면 클라이언트가 요청 잘못보낸 것이므로 400 Bad Request 오류 띄워주는게 맞음 => id 값이 올바른 ObjectId인지 확인해야 함
+
+- 검증방법 :
+
+```
+import mongoose from 'mongoose';
+
+const { ObjectId } = mongoose.Types;
+ObjectId.isValid(id);
+```
+
+- 미들웨어 만들어 한번만 구현한 다음 여러 라우트에 적용
+
+#### Request Body 검증
+
+포스트 작성시 서버는 title, body, tags 값을 모두 전달받아야 하는데, 클라이언트가 값을 빼먹었을때 400 오류 발생해야 함
+
+- 검증방법 :
+  - 각 값을 if문으로 비교
+  - Joi 라이브러리 사용
