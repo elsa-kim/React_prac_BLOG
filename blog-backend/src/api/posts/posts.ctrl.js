@@ -52,9 +52,30 @@ export const write = async (ctx) => {
 
 // GET /api/posts
 export const list = async (ctx) => {
+  // query는 문자열이기 때문에 숫자로 변환해줘야 함
+  // 값 주어지지 않았다면 1을 기본으로
+  const page = parseInt(ctx.query.page || '1', 10);
+
+  if (page < 1) {
+    ctx.status = 400;
+    return;
+  }
+
   try {
-    const posts = await Post.find().exec();
-    ctx.body = posts;
+    const posts = await Post.find()
+      .sort({ _id: -1 })
+      .limit(10)
+      .skip((page - 1) * 10)
+      .lean()
+      .exec();
+    const postCount = await Post.countDocuments().exec();
+    ctx.set('Last-page', Math.ceil(postCount / 10));
+    // 글자수 200자로 제한, 뒤에 ...
+    ctx.body = posts.map((post) => ({
+      ...post,
+      body:
+        post.body.length < 200 ? post.body : `${post.body.slice(0, 200)}...`,
+    }));
   } catch (e) {
     ctx.throw(500, e);
   }
