@@ -37,13 +37,46 @@ export const register = async (ctx) => {
     await user.save(); // 데이터베이스에 저장
 
     ctx.body = user.serialize();
+
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
   } catch (e) {
     ctx.throw(500, e);
   }
 };
 
 export const login = async (ctx) => {
-  // 로그인
+  const { username, password } = ctx.request.body;
+
+  // username, password 없으면 에러 처리
+  if (!username || !password) {
+    ctx.status = 401;
+    return;
+  }
+
+  try {
+    const user = await User.findByUsername(username);
+    if (!user) {
+      ctx.status = 401;
+      return;
+    }
+    const valid = await user.checkPassword(password);
+    if (!valid) {
+      ctx.status = 401;
+      return;
+    }
+    ctx.body = user.serialize();
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      httpOnly: true,
+    });
+  } catch (e) {
+    ctx.throw(500, e);
+  }
 };
 
 export const check = async (ctx) => {
