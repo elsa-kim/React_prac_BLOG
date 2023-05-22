@@ -48,9 +48,10 @@ export const register = async (ctx) => {
   }
 };
 
+// POST /api/auth/login
 export const login = async (ctx) => {
   const { username, password } = ctx.request.body;
-
+  console.log(username);
   // username, password 없으면 에러 처리
   if (!username || !password) {
     ctx.status = 401;
@@ -59,6 +60,7 @@ export const login = async (ctx) => {
 
   try {
     const user = await User.findByUsername(username);
+    console.log(user);
     if (!user) {
       ctx.status = 401;
       return;
@@ -79,10 +81,18 @@ export const login = async (ctx) => {
   }
 };
 
+// GET api/auth/check
 export const check = async (ctx) => {
-  // 로그인 상태 확인
+  const { user } = ctx.state;
+  if (!user) {
+    ctx.status = 401;
+    return;
+  }
+  ctx.body = user;
 };
 
+// POST /api/auth/logout
 export const logout = async (ctx) => {
-  // 로그아웃
+  ctx.cookies.set('access_token');
+  ctx.status = 204;
 };

@@ -41,7 +41,9 @@ export const write = async (ctx) => {
     title,
     body,
     tags,
+    user: ctx.state.user,
   });
+  console.log(ctx.state.user);
   try {
     await post.save();
     ctx.body = post;

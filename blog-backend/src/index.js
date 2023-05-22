@@ -12,7 +12,7 @@ import jwtMiddleware from './lib/jwtMiddleware.js';
 const { PORT, MONGO_URI } = process.env;
 
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGO_URI, { useNewUrlParser: true })
   .then(() => {
     console.log('Connected to MongoDB');
     // createFakeData();
