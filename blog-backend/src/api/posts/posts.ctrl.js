@@ -4,10 +4,30 @@ import Joi from 'joi';
 
 const { ObjectId } = mongoose.Types;
 
-export const checkObjectId = (ctx, next) => {
+export const getPostById = async (ctx, next) => {
   const { id } = ctx.params;
   if (!ObjectId.isValid(id)) {
     ctx.status = 400;
+    return;
+  }
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      ctx.status = 404;
+      return;
+    }
+    ctx.state.post = post;
+    return next();
+  } catch (e) {
+    ctx.throw(500, e);
+  }
+};
+
+export const checkOwnPost = (ctx, next) => {
+  const { user, post } = ctx.state;
+  // MongoDB에서 조회한 데이터의 id 값을 문자열과 비교할 땐 반드시 .toString() 해야함
+  if (post.user._id.toString() !== user._id) {
+    ctx.status = 403;
     return;
   }
   return next();
@@ -51,7 +71,7 @@ export const write = async (ctx) => {
   }
 };
 
-// GET /api/posts
+// GET /api/posts?username=&tag=&page=
 export const list = async (ctx) => {
   // query는 문자열이기 때문에 숫자로 변환해줘야 함
   // 값 주어지지 않았다면 1을 기본으로
@@ -62,14 +82,21 @@ export const list = async (ctx) => {
     return;
   }
 
+  const { tag, username } = ctx.query;
+  // tag, username 값이 유효하면 객체안에 넣고 그렇지않으면 넣지않음
+  const query = {
+    ...(username ? { 'user.username': username } : {}),
+    ...(tag ? { tags: tag } : {}),
+  };
+
   try {
-    const posts = await Post.find()
+    const posts = await Post.find(query)
       .sort({ _id: -1 })
       .limit(10)
       .skip((page - 1) * 10)
       .lean()
       .exec();
-    const postCount = await Post.countDocuments().exec();
+    const postCount = await Post.countDocuments(query).exec();
     ctx.set('Last-page', Math.ceil(postCount / 10));
     // 글자수 200자로 제한, 뒤에 ...
     ctx.body = posts.map((post) => ({
@@ -83,18 +110,8 @@ export const list = async (ctx) => {
 };
 
 // GET /api/posts/:id
-export const read = async (ctx) => {
-  const { id } = ctx.params;
-  try {
-    const post = await Post.findById(id).exec();
-    if (!post) {
-      ctx.status = 404;
-      return;
-    }
-    ctx.body = post;
-  } catch (e) {
-    ctx.throw(500, e);
-  }
+export const read = (ctx) => {
+  ctx.body = ctx.state.post;
 };
 
 // DELETE /api/posts/:id
