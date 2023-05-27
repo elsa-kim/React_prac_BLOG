@@ -43,3 +43,7 @@ Ducks 패턴 사용해 액션타입, 액션 생성 함수, 리듀서가 하나�
 
 - 언어 선택(javascriptreact)
 - JSON 파일 안에 복사한 Snippet 붙여 넣고 저장
+
+#### API 연동
+
+axios 사용해 API 연동, 리덕스에서 비동기 작업 쉽게 관리하기 위해 redux-saga와 createRequestSaga 유틸 함수 사용

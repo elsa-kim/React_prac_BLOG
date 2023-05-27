@@ -52,23 +52,27 @@ const textMap = {
   register: '회원가입',
 };
 
-const AuthForm = ({ type }) => {
+const AuthForm = ({ type, form, onChange, onSubmit }) => {
   const text = textMap[type];
   return (
     <div>
       <AuthFormBlock>
         <h3>{text}</h3>
-        <form>
+        <form onSubmit={onSubmit}>
           <StyledInput
             autoComplete="username"
             name="username"
             placeholder="아이디"
+            onChange={onChange}
+            value={form.username}
           />
           <StyledInput
             autoComplete="new-password"
             name="password"
             placeholder="비밀번호"
             type="password"
+            onChange={onChange}
+            value={form.password}
           />
           {type === 'register' && (
             <StyledInput
@@ -76,6 +80,8 @@ const AuthForm = ({ type }) => {
               name="passwordConfirm"
               placeholder="비밀번호 확인"
               type="password"
+              onChange={onChange}
+              value={form.passwordConfirm}
             />
           )}
           {/* cyan={true} fullWidth={true}와 같음 */}
