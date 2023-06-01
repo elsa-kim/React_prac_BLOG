@@ -84,8 +84,7 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
               value={form.passwordConfirm}
             />
           )}
-          {/* cyan={true} fullWidth={true}와 같음 */}
-          <ButtonWithMarginTop cyan fullWidth>
+          <ButtonWithMarginTop cyan="true" fullwidth="true">
             {text}
           </ButtonWithMarginTop>
         </form>
