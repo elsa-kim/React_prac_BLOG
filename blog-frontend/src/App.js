@@ -9,7 +9,7 @@ import PostPage from './pages/PostPage';
 const App = () => {
   return (
     <Routes>
-      {/* <Route element={<PostListPage />} path="/" exact /> */}
+      <Route element={<PostListPage />} path="/" exact />
       <Route element={<PostListPage />} path="/:username" />
       <Route element={<LoginPage />} path="/login" />
       <Route element={<RegisterPage />} path="/register" />

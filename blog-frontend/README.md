@@ -55,3 +55,14 @@ axios 사용해 API 연동, 리덕스에서 비동기 작업 쉽게 관리하기
   - CRA로 만든 프로젝트에서 프록시 설정할 땐 package.json 파일 수정 후 서버 껐다가 다시 실행
   - API 함수 작성 : 리액트 애플리케이션에서 client.get('/api.posts') 하면 웹팩 개발 서버가 프록시 역할 해서 http://localhost:4000/api/posts에 대신 요청한 뒤 결과물을 응답
 - redux-saga 통해 더 쉽게 API 요청할 수 있도록 리덕스 모듈과 createRequestSaga 유틸 함수 설정
+
+#### 로그인 상태 유지
+
+회원가입 및 로그인 하면 사용자 정보를 localStorage에 저장하도록 작업,
+페이지 새로고침했을 때도 로그인 상태 유자하려면 리액트 앱이 브라우저에서 맨 처음 렌더링 될 때 localStorage에서 값 불러와 리덕스 스토어 안에 넣도록 구현
+
+- App 컴포넌트에서 useEffect 사용해 처리하는 방법
+- App 컴포넌트를 클래스형 컴포넌트로 변환해 componentDidMount 메서드 만들고 그 안에서 처리하는 방법
+- 프로젝트 엔트리 파일인 index.js에서 처리하는 방법 => 사용
+  - componentDidMount와 useEffect는 컴포넌트가 한번 렌더링된 이후에 실행되기 때문에 사용자가 아주 짧은 깜박임 현상 경험할 수 있음
+  - index.js에서 사용자 정보 불러오도록 처리하고 컴포넌트 렌더링하면 깜박임 현상 발생하지 않음
