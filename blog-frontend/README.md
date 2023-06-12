@@ -70,6 +70,7 @@ axios 사용해 API 연동, 리덕스에서 비동기 작업 쉽게 관리하기
 #### 글쓰기 페이지 기능
 
 - 글 작성 에디터는 Quill 라이브러리 사용
+  - quill 에디터는 일반 input이나 textarea가 아니기 때문에 onChange와 value 값 사용해 상태 관리할 수 없음
 - 에디터 하단 컴포넌트 UI 구현
   - TagBox 컴포넌트에서 모든 작업 하는게 아닌, TagItem, TagList 컴포넌트 추가로 만들어 렌더링 최적화
     - 추가로 React.memo 사용해 컴포넌트 감싸주면 해당 컴포넌트가 받아오는 props가 실제로 바뀌었을 때만 리렌더링 해줌
