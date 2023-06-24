@@ -1,8 +1,33 @@
 import Post from '../../models/post.js';
 import mongoose from 'mongoose';
 import Joi from 'joi';
+import sanitizeHtml from 'sanitize-html';
 
 const { ObjectId } = mongoose.Types;
+// HTML 필터링 시 허용할 것 설정해줌
+const sanitizeOption = {
+  allowedTags: [
+    'h1',
+    'h2',
+    'b',
+    'i',
+    'u',
+    's',
+    'p',
+    'ul',
+    'ol',
+    'li',
+    'blockquote',
+    'a',
+    'img',
+  ],
+  allowedAttributes: {
+    a: ['href', 'name', 'target'],
+    img: ['src'],
+    li: ['class'],
+  },
+  allowedSchemes: ['data', 'http'],
+};
 
 export const getPostById = async (ctx, next) => {
   const { id } = ctx.params;
@@ -59,7 +84,7 @@ export const write = async (ctx) => {
   const { title, body, tags } = ctx.request.body;
   const post = new Post({
     title,
-    body,
+    body: sanitizeHtml(body, sanitizeOption),
     tags,
     user: ctx.state.user,
   });
@@ -69,6 +94,14 @@ export const write = async (ctx) => {
   } catch (e) {
     ctx.throw(500, e);
   }
+};
+
+// html 없애고 내용 너무 길면 200자로 제한하는 함수
+const removeHtmlAndShorten = (body) => {
+  const filtered = sanitizeHtml(body, {
+    allowedTags: [],
+  });
+  return filtered.length < 200 ? filtered : `${filtered.slice(0, 200)}...`;
 };
 
 // GET /api/posts?username=&tag=&page=
@@ -101,8 +134,7 @@ export const list = async (ctx) => {
     // 글자수 200자로 제한, 뒤에 ...
     ctx.body = posts.map((post) => ({
       ...post,
-      body:
-        post.body.length < 200 ? post.body : `${post.body.slice(0, 200)}...`,
+      body: removeHtmlAndShorten(post.body),
     }));
   } catch (e) {
     ctx.throw(500, e);
@@ -150,8 +182,12 @@ export const update = async (ctx) => {
     return;
   }
 
+  const nextData = { ...ctx.request.body };
+  if (nextData.body) {
+    nextData.body = sanitizeHtml(nextData.body);
+  }
   try {
-    const post = await Post.findByIdAndUpdate(id, ctx.request.body, {
+    const post = await Post.findByIdAndUpdate(id, nextData, {
       new: true, // 이 값 설정하면 업데이트 된 데이터 반환함, false일때는 업데이트되기 전 데이터 반환
     }).exec();
     if (!post) {
