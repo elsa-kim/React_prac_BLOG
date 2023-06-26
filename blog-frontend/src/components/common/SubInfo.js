@@ -5,7 +5,7 @@ import palette from '../../lib/styles/palette';
 
 const SubInfoBlock = styled.div`
   ${(props) =>
-    props.hasMarginTop &&
+    props.hasmargintop &&
     css`
       margin-top: 1rem;
     `}
@@ -19,9 +19,9 @@ const SubInfoBlock = styled.div`
   }
 `;
 
-const SubInfo = ({ username, publishedDate, hasMarginTop }) => {
+const SubInfo = ({ username, publishedDate, hasmargintop }) => {
   return (
-    <SubInfoBlock hasMarginTop={hasMarginTop}>
+    <SubInfoBlock hasMarginTop={hasmargintop}>
       <span>
         <b>
           <Link to={`/@${username}`}>{username}</Link>

@@ -24,9 +24,9 @@ const PostContent = styled.div`
   color: ${palette.gray[8]};
 `;
 
-const PostViewer = ({ post, error, loading }) => {
+const PostViewer = ({ post, error, loading, actionButtons, ownPost }) => {
   if (error) {
-    if (ErrorEvent.response && error.response.status === 404) {
+    if (error.response && error.response.status === 404) {
       return <PostViewerBlock>존재하지 않는 포스트입니다.</PostViewerBlock>;
     }
     return <PostViewerBlock>오류 발생!</PostViewerBlock>;
@@ -48,6 +48,7 @@ const PostViewer = ({ post, error, loading }) => {
         />
         <Tags tags={tags} />
       </PostHead>
+      {ownPost && actionButtons}
       <PostContent dangerouslySetInnerHTML={{ __html: body }} />
     </PostViewerBlock>
   );

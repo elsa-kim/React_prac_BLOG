@@ -76,7 +76,7 @@ axios 사용해 API 연동, 리덕스에서 비동기 작업 쉽게 관리하기
     - 추가로 React.memo 사용해 컴포넌트 감싸주면 해당 컴포넌트가 받아오는 props가 실제로 바뀌었을 때만 리렌더링 해줌
   - TagBox는 input 바뀔때, 태그 목록 바뀔 때 렌더링
 
-#### 포스트 조회 기능 구현
+#### 포스트 조회 기능
 
 - 포스트 제목, 작성자 계정명, 작성 시간, 태그, 제목 보여줌
 
@@ -85,7 +85,15 @@ axios 사용해 API 연동, 리덕스에서 비동기 작업 쉽게 관리하기
 - sanitize-html 라이브러리 사용 : HTML 제거하는 기능, 특정 HTML만 허용하는 기능 등 가지고 있어 악성 스크립트 삽입 막을 수 있음
 - 백엔드에 sanitize-html 설치
 
-#### 페이지네이션 구현
+#### 페이지네이션
 
 - SUCCESS 액션 발생시킬 때 meta 값을 response로 넣어 HTTP 헤더 및 상태 코드 쉽게 조회 가능
 - Pagination 컴포넌트에서 props로 현재 선택된 계정명, 태그, 현재 페이지 숫자, 마지막 페이지 숫자를 가져오고 사용자가 이 컴포넌트에 있는 버튼 클릭 시 props로 받아온 값 사용해 이동해야 할 다음 경로 설정
+
+#### 포스트 수정/삭제 기능
+
+- 포스트 읽는 화면에서 포스트 작성자에게만 수정, 삭제 버튼 나타나도록 렌더링
+- PostActionButtons(수정/삭제) 렌더링 방법
+  1. PostViewer에서 직접 렌더링 : PostActionButtons에 onEdit, onRemove 등 props 전달 시 무조건 PostViewer 거쳐 전달해야 함, 컴포넌트가 받아오는 props가 너무 많아져 관리 힘들 수 있음
+  2. PostActionButtons의 컨테이너 컴포넌트 만들고 PostViewer 내부에서 바로 렌더링
+  3. props를 JSX 형태로 받아와 렌더링 : 컨테이너 컴포넌트 새로 만들 필요 없이 기존 PostViewerContainer에서 필요한 로직 작성 => 사용
