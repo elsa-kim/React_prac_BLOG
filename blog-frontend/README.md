@@ -97,3 +97,4 @@ axios 사용해 API 연동, 리덕스에서 비동기 작업 쉽게 관리하기
   1. PostViewer에서 직접 렌더링 : PostActionButtons에 onEdit, onRemove 등 props 전달 시 무조건 PostViewer 거쳐 전달해야 함, 컴포넌트가 받아오는 props가 너무 많아져 관리 힘들 수 있음
   2. PostActionButtons의 컨테이너 컴포넌트 만들고 PostViewer 내부에서 바로 렌더링
   3. props를 JSX 형태로 받아와 렌더링 : 컨테이너 컴포넌트 새로 만들 필요 없이 기존 PostViewerContainer에서 필요한 로직 작성 => 사용
+- 삭제 버튼 누르면 모달 사용해 사용자 확인 한번 더 요청 후 삭제

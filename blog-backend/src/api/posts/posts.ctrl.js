@@ -176,7 +176,7 @@ export const update = async (ctx) => {
 
   // 검증 후 검증실패인 경우 에러 처리
   const validation = schema.validate(ctx.request.body);
-  if (validation) {
+  if (!validation) {
     ctx.status = 400;
     ctx.body = validation;
     return;
