@@ -98,3 +98,9 @@ axios 사용해 API 연동, 리덕스에서 비동기 작업 쉽게 관리하기
   2. PostActionButtons의 컨테이너 컴포넌트 만들고 PostViewer 내부에서 바로 렌더링
   3. props를 JSX 형태로 받아와 렌더링 : 컨테이너 컴포넌트 새로 만들 필요 없이 기존 PostViewerContainer에서 필요한 로직 작성 => 사용
 - 삭제 버튼 누르면 모달 사용해 사용자 확인 한번 더 요청 후 삭제
+
+### react-helmet-async로 meta 태그 설정
+
+- 구글, 네이버 같은 검색 엔진에서 웹 페이지 수집할 때 meta 태그 읽음
+- 클라이언트 프로젝트에 react-helmet-async 라이브러리 설치
+  - 더 깊숙한 곳에 위치한 Helmet이 우선권 가짐
